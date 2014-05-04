@@ -87,10 +87,12 @@ func (s *Service) Serve() error {
 			r, ok := s.data[id]
 			if ok {
 				if err := ipt.Exec("", r); err != nil {
+					s.processChan <- id
 					s.err(err)
+				} else {
+					s.Done(id)
 				}
 			}
-			s.Done(id)
 		}(id)
 	}
 	return nil
